@@ -23,14 +23,15 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-
+        //Create retrofit client
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://jsonplaceholder.typicode.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         JSONPlaceholder service = retrofit.create(JSONPlaceholder.class);
-
+        
+        //Get all users
         Call<List<User>> users = service.getUsers();
         users.enqueue(new Callback<List<User>>() {
             @Override
@@ -47,6 +48,7 @@ public class Main {
             }
         });
 
+        //Get user by ID
         Call<User> user = service.getUser(5);
         Response<User> execute = user.execute();
         if (execute.isSuccessful()) {
@@ -58,7 +60,7 @@ public class Main {
 
             System.out.println(execute.code());
         }
-        
+        //Send new post on server
         Post newPostVar = new Post();
         newPostVar.setTitle("Skuska");
         newPostVar.setUserId(2);
@@ -67,13 +69,13 @@ public class Main {
         Response<Post> execNewPost = newPost.execute();
         if (execNewPost.isSuccessful()) {
             Post post2 = execNewPost.body();
-                System.out.println("Title " + post2.getTitle() + " Body:" + post2.getBody()+ "Id:" + post2.getId());
+            System.out.println("Title " + post2.getTitle() + " Body:" + post2.getBody() + "Id:" + post2.getId());
 
         } else {
             ResponseBody errorBody = execNewPost.errorBody();
             System.out.println(execute.code());
         }
-        
+
         //Get all posts
         Call<List<Post>> posts = service.getPosts();
         Response<List<Post>> executePost = posts.execute();
@@ -88,8 +90,8 @@ public class Main {
 
             System.out.println(execute.code());
         }
-        
-       // Posts By user
+
+        // Get Posts By userId
         Call<List<Post>> postsByUser = service.getPostsByUserId(1);
         Response<List<Post>> executePostByUser = postsByUser.execute();
         if (executePost.isSuccessful()) {
@@ -103,9 +105,7 @@ public class Main {
 
             System.out.println(execute.code());
         }
-        
+
     }
-    
-    
 
 }
